@@ -12,41 +12,147 @@ base_model:
 library_name: transformers
 ---
 
-# Sentiment Analysis Web App
+# Sentiment Analysis Web Application
 
-This project provides a sentiment analysis web application that utilizes Hugging Face's `DistilBERT` transformer model to classify text into positive, negative, or neutral sentiments. The model is fine-tuned for sentiment analysis, and the web interface built with Flask allows users to input text and view sentiment classification results.
+A comprehensive sentiment analysis tool that classifies text into positive, negative, or neutral sentiments using a fine-tuned DistilBERT transformer model. [1](#2-0)  The application features both single text analysis and batch file processing through an intuitive web interface.
 
-## Tech Stack
+## 🚀 Features
 
-- **AI Model:** Hugging Face Transformers (DistilBERT)
-- **Backend Framework:** Flask
-- **Frontend Framework:** HTML, CSS, JavaScript, Bootstrap
-- **Environment:** Python 3.x, pip/venv
-- **Version Control:** Git and GitHub
-- This website was hosted using Ngrok 
+- **Real-time Sentiment Analysis**: Classify individual text inputs instantly
+- **Batch Processing**: Upload `.txt` or `.csv` files for bulk sentiment analysis
+- **Three-Class Classification**: Negative, Neutral, and Positive sentiment detection
+- **Confidence Scores**: Get probability scores for each prediction
+- **Responsive Web Interface**: Bootstrap-powered UI that works on all devices
+- **Multiple Deployment Options**: Development (Jupyter + ngrok) and production (Render.com) ready
 
-# Model Card
+## 🛠️ Tech Stack
 
-**Model Overview**:  
-This sentiment analysis model classifies user-inputted text into three categories: positive, negative, or neutral. It uses natural language processing (NLP) techniques to evaluate the emotional tone of the text, providing a quick and automated way to understand sentiment. 
+- **AI Model**: Hugging Face Transformers (DistilBERT) [2](#2-1) 
+- **Backend**: Flask web framework [3](#2-2) 
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap [4](#2-3) 
+- **Environment**: Python 3.x [5](#2-4) 
+- **Deployment**: Render.com, ngrok tunneling [6](#2-5) 
 
-**Intended Use**:  
-- **End Users**: For analyzing customer feedback, social media posts, or personal messages.
-- **Business Professionals**: To assess product reviews or track brand sentiment.
-- **Support Teams**: To prioritize customer interactions based on emotional tone.
+## 📊 Model Information
 
-**Limitations**:  
-- **Bias**: May exhibit biases due to cultural or demographic imbalances in training data.
-- **Accuracy**: Struggles with sarcasm, irony, or highly nuanced emotions.
-- **Context Sensitivity**: Limited in understanding text context, especially with slang or domain-specific language.
+### Model Details
+- **Base Model**: `distilbert-base-uncased` [7](#2-6) 
+- **Model Repository**: [bareeraqrsh/Sentiment-analysis-tool](https://huggingface.co/bareeraqrsh/Sentiment-analysis-tool) [8](#2-7) 
+- **Dataset**: [Sp1786/multiclass-sentiment-analysis-dataset](https://huggingface.co/datasets/Sp1786/multiclass-sentiment-analysis-dataset) [9](#2-8) 
+- **License**: MIT [10](#2-9) 
+- **Language**: English [11](#2-10) 
 
-**Ethical Considerations**:  
-- Ensure user data privacy and prevent malicious uses such as surveillance or manipulation.
-- Maintain transparency about the model's capabilities and limitations.
+### Performance Metrics
+- **Accuracy**: Tracked via wandb.ai [12](#2-11) 
+- **F1-Score**: Multi-class evaluation [13](#2-12) 
 
-**Recommendations**:  
-- Regular updates and monitoring to mitigate biases and improve accuracy.
-- Human oversight in high-stakes applications to verify model outputs.
+## 🚀 Quick Start
+
+### Prerequisites
+```bash
+pip install flask transformers torch numpy
+```
+
+### Running the Application
+
+#### Option 1: Development (Jupyter Notebook)
+1. Open `flask_interface.ipynb` in Google Colab or Jupyter
+2. Install dependencies and set up ngrok authentication
+3. Run all cells to start the Flask server with ngrok tunneling
+
+#### Option 2: Production Deployment
+Deploy directly to Render.com using the included configuration files.
+
+### Model Loading
+The application automatically loads the pre-trained model and tokenizer:
+
+```python
+MODEL_NAME = "bareeraqrsh/Sentiment-analysis-tool"
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+LABELS = ["Negative", "Neutral", "Positive"]
+```
+
+## 💻 Usage
+
+### Web Interface
+1. **Single Text Analysis**: Enter text in the textarea and click "Analyze"
+2. **Batch Processing**: Upload a `.txt` or `.csv` file with one text per line
+3. **Results**: View predictions with confidence scores in an organized table
+
+### API Endpoint
+- **Route**: `/` (GET, POST)
+- **Methods**: Form submission with text input or file upload
+- **Response**: HTML page with sentiment predictions and confidence scores
+
+## 📁 Project Structure
+
+```
+sentiment-analysis-tool/
+├── README.md                          # Project documentation
+├── Sentiment_analysis_model.ipynb     # Model training notebook
+├── flask_interface.ipynb              # Web application (development)
+├── requirements.txt                   # Python dependencies
+├── .render.yaml                       # Production deployment config
+└── model_artifacts/                   # Trained model files (Git LFS)
+    ├── model.safetensors              # Model weights (~267MB)
+    ├── config.json                    # Model configuration
+    ├── tokenizer_config.json          # Tokenizer settings
+    └── vocab.txt                      # Vocabulary file
+```
+
+## 🎯 Use Cases
+
+### Direct Applications
+- **Customer Feedback Analysis**: Analyze product reviews and customer comments [14](#2-13) 
+- **Social Media Monitoring**: Track brand sentiment across platforms
+- **Content Moderation**: Detect negative sentiment in user-generated content
+- **Support Ticket Prioritization**: Identify urgent issues based on emotional tone
+
+### Business Applications
+- Market research and competitor analysis
+- Employee feedback evaluation
+- Campaign effectiveness measurement
+- Risk assessment in communications
+
+## ⚠️ Limitations & Considerations
+
+### Model Limitations
+- **Sarcasm & Irony**: Limited ability to detect nuanced expressions [15](#2-14) 
+- **Context Sensitivity**: May struggle with domain-specific language or slang [16](#2-15) 
+- **Cultural Bias**: Potential biases from training data demographics [17](#2-16) 
+
+### Ethical Guidelines
+- Ensure user data privacy and consent [18](#2-17) 
+- Avoid surveillance or manipulation applications [19](#2-18) 
+- Implement human oversight for critical decisions [20](#2-19) 
+
+### Recommendations
+- Regular model evaluation and bias monitoring [21](#2-20) 
+- Human review for high-stakes applications
+- Transparent communication of model capabilities and limitations
+
+## 🔧 Development
+
+### Training Pipeline
+The model training process is documented in `Sentiment_analysis_model.ipynb`, which includes:
+- Data loading and preprocessing from Hugging Face datasets [22](#2-21) 
+- DistilBERT fine-tuning with custom classification head
+- Model evaluation and performance tracking via wandb.ai [23](#2-22) 
+- Model artifact generation and storage
+
+### Deployment Options
+1. **Development**: Jupyter notebook with ngrok tunneling for testing
+2. **Production**: Render.com deployment with Gunicorn WSGI server
+3. **Local**: Standard Flask development server
+
+## 📈 Performance Monitoring
+
+The training process includes comprehensive evaluation metrics tracked through wandb.ai, providing insights into:
+- Training and validation accuracy
+- Loss curves and convergence patterns
+- F1-scores for multi-class classification
+- Model performance across different sentiment categories
 
 ## Dataset and training Details
 
@@ -74,67 +180,6 @@ Dataset loaded from dataset library in huggingface hub contains splits for datas
    ![image](https://github.com/user-attachments/assets/48f49c43-8684-4952-8743-23007b305cdb)
 
 
-## Model Details
-
-### Model Description
-
-- **Developed by:** [https://huggingface.co/bareeraqrsh]
-- **Model type:** [sentiment-analysis]
-- **Language(s) (NLP):** [English]
-- **License:** [MIT]
-- **Finetuned from model [distillbert]:** [sistillbert-base-uncased]
-
-## Uses
-
-The sentiment analysis model is intended for use by individuals, businesses, and organizations to classify text as positive, negative, or neutral.
-
-### Direct Use
-
-When used directly without fine-tuning or integration into a larger ecosystem, the sentiment analysis model can serve a range of standalone functions:
-
-1. **Text Classification**: Users can input any text (such as social media posts, product reviews, or personal messages) and receive an instant classification of the sentiment—positive, negative, or neutral.
-   
-2. **Content Evaluation**: Individuals or businesses can analyze single or batches of text to assess the general tone and emotional undertone of the content. This could be used for personal reflection or to evaluate customer feedback.
-
-3. **Emotional Tone Detection**: The model can be employed to understand the emotional nuances in writing, which can help in content moderation or detecting sarcasm or anger in text.
-
-4. **Quick Sentiment Assessment**: Ideal for quick assessments where deep context or fine-tuning is not necessary, providing an immediate understanding of sentiment in various documents or messages.
-
-In direct use, the model functions as a standalone tool for basic sentiment analysis, providing insights into the emotional tone of text without any additional customization or system integration.
-
-### Out-of-Scope Use
-
-1. **Sensitive Contexts**: Not for mental health assessments, legal, or medical advice.
-2. **Malicious Use**: Should not be used for targeting vulnerable individuals or surveillance.
-3. **Inaccurate Outputs**: Struggles with sarcasm, irony, and culturally specific language.
-4. **Bias**: May produce biased results if training data is unbalanced.
-5. **Over-reliance**: Shouldn’t be the sole basis for critical business or emotional decisions.
-
-## Bias, Risks, and Limitations
-
-1. **Bias**:
-   - **Cultural and Linguistic Bias**: The model may misinterpret sentiment in texts with specific cultural references, slang, or dialects outside its training data.
-   - **Demographic Bias**: If training data is not diverse, the model may show biased sentiment classifications toward certain groups, leading to unfair outcomes.
-
-2. **Risks**:
-   - **Misinterpretation of Complex Emotions**: The model may struggle to understand sarcasm, irony, or nuanced emotions, resulting in incorrect sentiment classifications.
-   - **Over-simplification**: The model reduces complex emotions to simple categories (positive, negative, neutral), potentially missing subtleties in the text.
-   - **Data Privacy**: If personal data is used, there are risks related to privacy and misuse of sensitive information.
-
-3. **Limitations**:
-   - **Context Dependence**: The model may not always capture the full context of a text, especially if it relies on short snippets or lacks background information.
-   - **Accuracy Variations**: The model's performance can degrade with poorly structured text, slang, or very domain-specific language.
-   - **No Emotional Understanding**: The model classifies sentiment based on patterns, not genuine emotional understanding, limiting its ability to interpret human feelings accurately.
-
-### Recommendations
-
-1. **Bias and Limitations Awareness**: Educate users about potential biases (cultural, demographic) and limitations (sarcasm, nuance).
-2. **Transparency**: Disclose model limitations and provide feedback channels for improvement.
-3. **Privacy and Ethics**: Ensure strong data privacy and ethical guidelines, avoiding misuse.
-4. **Human Oversight**: Use human review for high-stakes applications to ensure accuracy and context.
-5. **Regular Evaluation**: Continuously monitor and update the model to improve performance and adapt to new data.
-
-
 ##Result
 
 - Web Interface
@@ -149,13 +194,29 @@ In direct use, the model functions as a standalone tool for basic sentiment anal
   
    ![image](https://github.com/user-attachments/assets/ed72456b-7766-408f-a9a9-de0539ecdebd)
 
+## 🤝 Contributing
 
-## License
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-This project is licensed under the MIT License.
+## 📄 License
 
+This project is licensed under the MIT License. [24](#2-23)  See the LICENSE file for details.
 
-## References
+## 🔗 References
 
-https://huggingface.co/blog/sentiment-analysis-python
+- [Hugging Face Sentiment Analysis Guide](https://huggingface.co/blog/sentiment-analysis-python) [25](#2-24) 
+- [DistilBERT Paper](https://arxiv.org/abs/1910.01108)
+- [Transformers Library Documentation](https://huggingface.co/docs/transformers/)
 
+## 📞 Support
+
+For questions, issues, or contributions, please:
+- Open an issue on GitHub
+- Check the existing documentation and wiki pages
+- Review the model card for detailed usage guidelines
+
+**Note**: This tool is designed for general sentiment analysis tasks. For specialized domains or critical applications, consider additional fine-tuning or human validation of results.
