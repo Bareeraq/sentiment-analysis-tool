@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
+import gc
 from flask import Flask, render_template, request, jsonify
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import numpy as np
 from dotenv import load_dotenv
+# Set environment variable for PyTorch memory management
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -16,19 +19,43 @@ if not HF_TOKEN:
     print("Warning: HF_TOKEN environment variable not set")
 
 # Load model
+# MODEL_NAME = "bareeraqrsh/Sentiment-analysis-tool"
+# try:
+#     model = AutoModelForSequenceClassification.from_pretrained(
+#         MODEL_NAME, 
+#         num_labels=3, 
+#         token=HF_TOKEN
+#     )
+#     tokenizer = AutoTokenizer.from_pretrained(
+#         MODEL_NAME, 
+#         token=HF_TOKEN
+#     )
+#     LABELS = ["Negative", "Neutral", "Positive"]
+#     print("Model loaded successfully")
+# except Exception as e:
+#     print(f"Error loading model: {e}")
+#     model = None
+#     tokenizer = None
+#     LABELS = []
+
+# Load model with memory optimization
 MODEL_NAME = "bareeraqrsh/Sentiment-analysis-tool"
 try:
+    # Memory optimization settings
     model = AutoModelForSequenceClassification.from_pretrained(
         MODEL_NAME, 
         num_labels=3, 
-        token=HF_TOKEN
+        token=HF_TOKEN,
+        torch_dtype=torch.float16,
+        low_cpu_mem_usage=True
     )
+    model = model.to('cpu')  # Use CPU only to save memory
     tokenizer = AutoTokenizer.from_pretrained(
         MODEL_NAME, 
         token=HF_TOKEN
     )
     LABELS = ["Negative", "Neutral", "Positive"]
-    print("Model loaded successfully")
+    print("Model loaded successfully with memory optimization")
 except Exception as e:
     print(f"Error loading model: {e}")
     model = None
@@ -111,6 +138,12 @@ def analyze():
         'confidence': confidence,
         'probabilities': {label: float(prob) for label, prob in zip(LABELS, probabilities)}
     })
+
+def cleanup_memory():
+    gc.collect()
+    torch.cuda.empty_cache() if torch.cuda.is_available() else None
+
+cleanup_memory()
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
